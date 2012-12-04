@@ -29,3 +29,8 @@ UncertainNumber{Float64}(2.0,0.28284271247461906)
 julia> cosh(a^2-3*sinh(b*a))
 UncertainNumber{Float64}(9773.540317776484,31230.955771261884)
 ~~~
+
+Caveats
+-------
+
+Currently, only basic arithmetic functions (+-*/) and trig/hypertrig functions are supported. Feel free to implement more and send a pull request.
