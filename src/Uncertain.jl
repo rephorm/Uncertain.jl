@@ -24,7 +24,8 @@ UncertainNumber{T<:Real, S<:Real}(v::T, u::S) = UncertainNumber(float(v), float(
 #
 # Implement basic operations
 #
-import Base.+, Base.-, Base.*, Base./
+import Base.+, Base.-, Base.*, Base./, Base.^
+
 +(a::UncertainNumber, b::UncertainNumber) = UncertainNumber(a.value + b.value, hypot(a.uncertainty, b.uncertainty))
 
 -(a::UncertainNumber, b::UncertainNumber) = UncertainNumber(a.value - b.value, hypot(a.uncertainty, b.uncertainty))
@@ -40,6 +41,12 @@ function /(a::UncertainNumber, b::UncertainNumber)
     UncertainNumber(val, val * hypot(a.uncertainty/a.value,
                     b.uncertainty/b.value))
 end
+
+# XXX these seem to be ignored, with ^ induced from * instead, which is not correct
+^(a::UncertainNumber, b::FloatingPoint) = UncertainNumber(a.value^b, b*a.value^(b-1)*a.uncertainty)
+
+^(a::UncertainNumber, b::UncertainNumber) = UncertainNumber(a.value^b.value, hypot( b.value * a.value^(b.value-1) * a.uncertainty,
+        a.value ^ b.value * log(a.value) * b.uncertainty) )
 
 #
 # Trig functions
